@@ -34,6 +34,9 @@ class Renderer
         }
     }
 
+    /**
+     * @codeCoverageIgnore this involves actual output to HTTP headers
+     */
     public function renderHeaders(Response $response): void
     {
         http_response_code($response->status->code);
@@ -42,6 +45,9 @@ class Renderer
         }
     }
 
+    /**
+     * @codeCoverageIgnore this involves actual output to HTTP body
+     */
     public function renderBody(Response $response): void
     {
         $response->content->render();
