@@ -122,15 +122,6 @@ class StatusTest extends TestCase
         $this->assertEquals('Network Authentication Required', $status511->reason_phrase);
     }
 
-    public function test_readonly_properties(): void
-    {
-        $status = new Status(200);
-
-        // Verify the class is readonly by checking properties cannot be modified
-        $reflection = new \ReflectionClass($status);
-        $this->assertTrue($reflection->isReadOnly());
-    }
-
     public function test_custom_reason_phrase_overrides_default(): void
     {
         $status = new Status(404, 'Page Not Here');

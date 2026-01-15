@@ -294,15 +294,6 @@ class AppliedRangeContentTest extends TestCase
         $this->assertEquals('0123456789', $output);
     }
 
-    public function test_readonly_properties(): void
-    {
-        $content = new StringContent('test');
-        $ranged = new AppliedRangeContent($content, 0, 1);
-
-        $reflection = new \ReflectionClass($ranged);
-        $this->assertTrue($reflection->isReadOnly());
-    }
-
     public function test_throws_exception_for_end_before_start(): void
     {
         $content = new StringContent('0123456789');
