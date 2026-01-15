@@ -12,13 +12,13 @@ namespace Joby\Smol\Response\Content;
 /**
  * Content wrapper for applying a range to a rage capable content object. It will pass through the size and all other metadata unchanged, but will pass through its own render() to the underlying content's renderRange().
  */
-readonly class AppliedRangeContent implements ContentInterface
+class AppliedRangeContent implements ContentInterface
 {
 
     public function __construct(
-        public RangeContentInterface $content,
-        public int|null $start,
-        public int|null $end,
+        public readonly RangeContentInterface $content,
+        public readonly int|null $start,
+        public readonly int|null $end,
     )
     {
         if (!$this->content->verifyRange($this->start, $this->end)) {

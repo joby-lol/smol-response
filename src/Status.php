@@ -12,13 +12,13 @@ namespace Joby\Smol\Response;
 /**
  * Class representing an HTTP status code and reason phrase.
  */
-readonly class Status
+class Status
 {
 
     /**
      * @var array<int,string> Standard HTTP status codes and their reason phrases.
      */
-    public const array CODES = [
+    public const CODES = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         200 => 'OK',
@@ -70,7 +70,7 @@ readonly class Status
         511 => 'Network Authentication Required',
     ];
 
-    public string $reason_phrase;
+    public readonly string $reason_phrase;
 
     /**
      * @param int $code
@@ -78,7 +78,7 @@ readonly class Status
      * @throws ResponseException if the status code is invalid.
      */
     public function __construct(
-        public int $code,
+        public readonly int $code,
         string|null $reason_phrase = null,
     )
     {
