@@ -114,6 +114,11 @@ All content types implement `ContentInterface` with automatic metadata handling.
 For text and HTML content:
 
 ```php
+// With optional filename parameter (defaults to 'page.html')
+$content = new StringContent('<h1>Hello World</h1>', 'custom.html');
+$response->content = $content;
+
+// Or set filename separately
 $content = new StringContent('<h1>Hello World</h1>');
 $content->setFilename('page.html');
 $response->content = $content;
@@ -124,10 +129,10 @@ $response->content = $content;
 For dynamic content generation with callbacks:
 
 ```php
-// Simple callback
+// Simple callback with optional filename parameter (defaults to 'page.html')
 $content = new CallbackContent(function() {
     echo renderTemplate('page.html', ['title' => 'Welcome']);
-});
+}, 'welcome.html');
 
 // With external data
 $data = fetchDataFromDatabase();
@@ -138,8 +143,7 @@ $content = new CallbackContent(function() use ($data) {
 });
 
 // Supports any callable type
-$content = new CallbackContent([$templateEngine, 'render']);
-$content->setFilename('output.html');
+$content = new CallbackContent([$templateEngine, 'render'], 'output.html');
 $response->content = $content;
 ```
 
@@ -157,7 +161,12 @@ $response->content = $content;
 For serving files with automatic MIME detection:
 
 ```php
+// Filename defaults to basename of the file path
 $content = new FileContent('/path/to/file.pdf');
+$response->content = $content;
+
+// Or override with custom filename
+$content = new FileContent('/path/to/file.pdf', 'document.pdf');
 $response->content = $content;
 ```
 

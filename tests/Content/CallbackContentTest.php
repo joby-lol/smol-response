@@ -321,13 +321,13 @@ class CallbackContentTest extends TestCase
         $this->assertEquals('converted', $output);
     }
 
-    public function test_filename_defaults_to_null(): void
+    public function test_filename_default(): void
     {
         $content = new CallbackContent(function () {
             echo 'test';
         });
 
-        $this->assertNull($content->filename());
+        $this->assertEquals('page.html', $content->filename());
     }
 
     public function test_callback_can_access_external_content_object(): void

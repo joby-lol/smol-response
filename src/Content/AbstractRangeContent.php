@@ -9,9 +9,6 @@
 
 namespace Joby\Smol\Response\Content;
 
-use DateTimeInterface;
-use Stringable;
-
 abstract class AbstractRangeContent extends AbstractContent implements RangeContentInterface
 {
 

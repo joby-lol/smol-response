@@ -17,10 +17,11 @@ use Stringable;
 class StringContent extends AbstractRangeContent
 {
     public function __construct(
-        public string $content,
+        public string|Stringable $content,
+        string|Stringable|null $filename = 'page.html',
     )
     {
-        $this->filename = 'page.html';
+        $this->filename = $filename;
     }
 
     /**

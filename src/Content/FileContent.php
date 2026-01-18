@@ -20,6 +20,8 @@ class FileContent extends AbstractRangeContent
      */
     public int $render_chunk_size = 8192;
 
+    public readonly string $source_file;
+
     protected string|null $file_hash = null;
 
     public function etag(): string|Stringable|null
@@ -50,11 +52,14 @@ class FileContent extends AbstractRangeContent
     }
 
     public function __construct(
-        public readonly string $source_file,
+        string|Stringable $source_file,
+        string|Stringable|null $filename = null,
     ) {
+        $this->source_file = (string) $source_file;
         if (!file_exists($this->source_file)) {
             throw new ContentException("File does not exist: " . $this->source_file);
         }
+        $this->setFilename($filename);
     }
 
     /**
