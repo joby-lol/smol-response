@@ -11,6 +11,11 @@ namespace Joby\Smol\Response\Content;
 
 use Stringable;
 
+/**
+ * Content implementation for serving files from the filesystem.
+ *
+ * Automatically detects MIME types, generates ETags from file hashes, and supports efficient range requests for streaming large files. The file is read in chunks to minimize memory usage.
+ */
 class FileContent extends AbstractRangeContent
 {
 
@@ -24,6 +29,14 @@ class FileContent extends AbstractRangeContent
 
     protected string|null $file_hash = null;
 
+    /**
+     * Generate an ETag based on the file's MD5 hash.
+     *
+     * Computes and caches the MD5 hash of the file for use as an ETag. This allows clients to validate cached content efficiently.
+     *
+     * @return string|Stringable|null The computed ETag
+     * @throws ContentException if the file hash cannot be computed
+     */
     public function etag(): string|Stringable|null
     {
         if ($this->etag)
@@ -37,12 +50,25 @@ class FileContent extends AbstractRangeContent
         return $this->file_hash;
     }
 
+    /**
+     * Get the filename for this content.
+     *
+     * Returns the explicitly set filename, or falls back to the basename of the source file.
+     *
+     * @return string|Stringable|null The filename to use
+     */
     public function filename(): string|Stringable|null
     {
         return $this->filename
             ?? basename($this->source_file);
     }
 
+    /**
+     * Get the size of the file in bytes.
+     *
+     * @return int The file size in bytes
+     * @throws ContentException if the file size cannot be determined
+     */
     public function size(): int
     {
         $size = filesize($this->source_file);
@@ -51,6 +77,13 @@ class FileContent extends AbstractRangeContent
         return $size;
     }
 
+    /**
+     * Create new file content.
+     *
+     * @param string|Stringable $source_file Path to the file to serve
+     * @param string|Stringable|null $filename Filename for downloads (defaults to basename of source file)
+     * @throws ContentException if the file does not exist
+     */
     public function __construct(
         string|Stringable $source_file,
         string|Stringable|null $filename = null,

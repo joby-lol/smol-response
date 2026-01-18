@@ -13,10 +13,23 @@ use Joby\Smol\Response\Content\AppliedRangeContent;
 use Joby\Smol\Response\Content\ContentInterface;
 use Joby\Smol\Response\Content\RangeContentInterface;
 
+/**
+ * Handles rendering of HTTP responses to the client.
+ *
+ * This class is responsible for:
+ * - Preparing responses (e.g., setting appropriate status codes for ranges)
+ * - Building and sending HTTP headers with automatic metadata
+ * - Rendering response content to the output stream
+ */
 class Renderer
 {
 
     /**
+     * Render the complete HTTP response to the client.
+     *
+     * This is the main entry point for sending a response. It prepares the response, sends all HTTP headers, and outputs the response body.
+     *
+     * @param Response $response The response to render
      * @codeCoverageIgnore this involves actual output to HTTP headers/body
      */
     public function render(Response $response): void
@@ -26,6 +39,13 @@ class Renderer
         $this->renderBody($response);
     }
 
+    /**
+     * Prepare the response before rendering.
+     *
+     * Performs any necessary modifications to the response, such as setting status code to 206 for partial content responses.
+     *
+     * @param Response $response The response to prepare
+     */
     public function prepareResponse(Response $response): void
     {
         // set status to 206 if content is an AppliedRangeContent
@@ -54,7 +74,14 @@ class Renderer
     }
 
     /**
-     * @return array<string|\Stringable|null>
+     * Build the complete set of HTTP headers for the response.
+     *
+     * Automatically generates headers based on content metadata (Content-Type, Content-Length,
+     * ETag, Last-Modified, etc.) and merges with user-defined headers. User-defined headers
+     * take precedence and can override generated headers.
+     *
+     * @param Response $response The response to build headers for
+     * @return array<string|\Stringable|null> Associative array of header names to values
      */
     public function buildHeaders(Response $response): array
     {
@@ -91,6 +118,14 @@ class Renderer
         return $headers;
     }
 
+    /**
+     * Generate a Content-Disposition header value.
+     *
+     * Creates a properly formatted header indicating whether the content should be displayed inline or downloaded as an attachment, including filename with proper encoding for both ASCII and UTF-8 filenames.
+     *
+     * @param ContentInterface $content The content to generate the header for
+     * @return string The Content-Disposition header value
+     */
     public function header_contentDisposition(ContentInterface $content): string
     {
         $value = $content->attachment() ? 'attachment' : 'inline';
@@ -108,6 +143,14 @@ class Renderer
         return $value;
     }
 
+    /**
+     * Generate a Last-Modified header value.
+     *
+     * Formats the content's last modified timestamp as an HTTP-date string per RFC 7231.
+     *
+     * @param ContentInterface $content The content to generate the header for
+     * @return string|null The Last-Modified header value, or null if not available
+     */
     public function header_lastModified(ContentInterface $content): string|null
     {
         return $content->lastModified()
@@ -115,6 +158,14 @@ class Renderer
             : null;
     }
 
+    /**
+     * Generate an ETag header value.
+     *
+     * Wraps the content's ETag value in quotes and properly escapes any special characters for use in an HTTP header.
+     *
+     * @param ContentInterface $content The content to generate the header for
+     * @return string|null The ETag header value, or null if not available
+     */
     public function header_etag(ContentInterface $content): string|null
     {
         return $content->etag()

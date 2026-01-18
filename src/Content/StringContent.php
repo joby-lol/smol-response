@@ -12,10 +12,19 @@ namespace Joby\Smol\Response\Content;
 use Stringable;
 
 /**
- * Content implementation for string-based content.
+ * Content implementation for string-based responses.
+ *
+ * Suitable for HTML, plain text, or any other string-based content. Supports range requests for efficient partial content delivery. The content type is automatically inferred from the filename if not explicitly set.
  */
 class StringContent extends AbstractRangeContent
 {
+
+    /**
+     * Create new string-based content.
+     *
+     * @param string|Stringable $content The text content to send
+     * @param string|Stringable|null $filename Suggested filename for downloads (default: 'page.html')
+     */
     public function __construct(
         public string|Stringable $content,
         string|Stringable|null $filename = 'page.html',
@@ -25,7 +34,15 @@ class StringContent extends AbstractRangeContent
     }
 
     /**
-     * @inheritDoc
+     * Render a specific byte range of the string content.
+     *
+     * Uses substr() to efficiently extract and output the requested portion of the string.
+     *
+     * @param int|null $start The starting byte position (0-indexed, inclusive)
+     * @param int|null $end The ending byte position (0-indexed, inclusive)
+     * @return void
+     * @throws RangeUnsatisfiableException if the range is invalid for this content
+     * @throws ContentException if both start and end are null (should not occur due to validation)
      */
     public function renderRange(int|null $start, int|null $end): void
     {

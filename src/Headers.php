@@ -15,6 +15,10 @@ use Iterator;
 use Stringable;
 
 /**
+ * HTTP header collection with automatic name normalization.
+ *
+ * Headers are stored and accessed with case-insensitive, normalized names (e.g., "Content-Type"). Acts as both an array and an iterator for convenient access and manipulation.
+ *
  * @implements Iterator<string, string|Stringable|null>
  * @implements ArrayAccess<string, string|Stringable|null>
  */
@@ -28,7 +32,9 @@ class Headers implements ArrayAccess, Iterator, Countable
     protected array $headers = [];
 
     /**
-     * @param array<string,string|Stringable|null> $headers
+     * Create a new header collection.
+     *
+     * @param array<string,string|Stringable|null> $headers Initial headers as an associative array
      */
     public function __construct(array $headers = [])
     {
@@ -109,6 +115,14 @@ class Headers implements ArrayAccess, Iterator, Countable
         return count($this->headers);
     }
 
+    /**
+     * Normalize a header name to standard HTTP capitalization.
+     *
+     * Converts header names to Title-Case with hyphens (e.g., "content-type" becomes "Content-Type"). This ensures consistent header names regardless of how they're set.
+     *
+     * @param string $name The header name to normalize
+     * @return string The normalized header name
+     */
     public function normalizeHeaderName(string $name): string
     {
         $name = strtolower($name);

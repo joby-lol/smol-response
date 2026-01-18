@@ -94,7 +94,12 @@ abstract class AbstractContent implements ContentInterface
     }
 
     /**
-     * @inheritDoc
+     * Set whether this content should be downloaded as an attachment.
+     *
+     * When true, the Content-Disposition header will be set to "attachment", prompting the browser to download the file rather than displaying it inline.
+     *
+     * @param bool $attachment Whether to force download
+     * @return static This content object for method chaining
      */
     public function setAttachment(bool $attachment): static
     {
@@ -103,7 +108,12 @@ abstract class AbstractContent implements ContentInterface
     }
 
     /**
-     * @inheritDoc
+     * Set the suggested filename for this content.
+     *
+     * This filename is used in the Content-Disposition header and may be used to infer the MIME type if not explicitly set.
+     *
+     * @param string|Stringable|null $filename The filename to use
+     * @return static This content object for method chaining
      */
     public function setFilename(string|Stringable|null $filename): static
     {
@@ -120,7 +130,12 @@ abstract class AbstractContent implements ContentInterface
     }
 
     /**
-     * Infer a mime type from a filename.
+     * Infer a MIME type from a filename's extension.
+     *
+     * Uses a comprehensive mapping of common file extensions to MIME types. Returns null if the extension is not recognized.
+     *
+     * @param string|Stringable|null $filename The filename to analyze
+     * @return string|null The inferred MIME type, or null if unknown
      * @codeCoverageIgnore this is really just a best-effort mapping, it's silly to test every line here
      */
     protected static function inferMime(string|Stringable|null $filename): string|null

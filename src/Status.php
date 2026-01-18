@@ -73,9 +73,13 @@ class Status
     public readonly string $reason_phrase;
 
     /**
-     * @param int $code
-     * @param string|null $reason_phrase
-     * @throws ResponseException if the status code is invalid.
+     * Create an HTTP status code with optional custom reason phrase.
+     *
+     * The reason phrase will default to the standard phrase for the given code if not provided. Only standard HTTP status codes defined in the CODES constant are accepted.
+     *
+     * @param int $code HTTP status code (must be a standard code like 200, 404, etc.)
+     * @param string|null $reason_phrase Custom reason phrase (defaults to standard phrase for the code)
+     * @throws ResponseException if the status code is not a recognized standard code
      */
     public function __construct(
         public readonly int $code,

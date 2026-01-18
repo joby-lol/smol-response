@@ -10,11 +10,21 @@
 namespace Joby\Smol\Response\Content;
 
 /**
- * Content wrapper for applying a range to a rage capable content object. It will pass through the size and all other metadata unchanged, but will pass through its own render() to the underlying content's renderRange().
+ * Wrapper that applies a byte range to range-capable content.
+ *
+ * This wraps RangeContentInterface implementations to serve partial content (HTTP 206). It passes through all metadata from the wrapped content but renders only the requested byte range. The Renderer automatically sets this wrapper when processing range requests.
  */
 class AppliedRangeContent implements ContentInterface
 {
 
+    /**
+     * Create a ranged content wrapper.
+     *
+     * @param RangeContentInterface $content The content to apply the range to
+     * @param int|null $start Starting byte position (null for last N bytes)
+     * @param int|null $end Ending byte position (null for "from start to end")
+     * @throws RangeUnsatisfiableException if the range is invalid for the content
+     */
     public function __construct(
         public readonly RangeContentInterface $content,
         public readonly int|null $start,
@@ -90,6 +100,13 @@ class AppliedRangeContent implements ContentInterface
         $this->content->renderRange($this->start, $this->end);
     }
 
+    /**
+     * Generate the Content-Range header value.
+     *
+     * Builds a properly formatted Content-Range header showing which bytes are being sent and the total size of the content (e.g., "bytes 0-1023/4096").
+     *
+     * @return string The Content-Range header value
+     */
     public function contentRangeHeader(): string
     {
         return "bytes {$this->startByte()}-{$this->endByte()}/{$this->content->size()}";

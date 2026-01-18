@@ -10,41 +10,43 @@
 namespace Joby\Smol\Response\Content;
 
 /**
- * Abstract class for content that is capable of being rendered to satisfy a range request. Must be able to satisfy requests for:
- * - specific start/end byte ranges (i.e. "n-k" = the nth to kth byte)
- * - unbounded start ranges (i.e. "n-" = nth byte to end of file)
- * - n-byte end ranges (i.e. "-n" the last n bytes of the file)
+ * Interface for content that supports HTTP range requests.
+ *
+ * Implementing this interface allows content to be served in partial chunks, which is essential for video streaming, large file downloads with resume capability, and efficient bandwidth usage.
+ *
+ * Range requests support three formats:
+ * - Specific range: bytes n-k (from byte n to byte k inclusive)
+ * - From position to end: bytes n- (from byte n to the end)
+ * - Last N bytes: bytes -n (the last n bytes)
  */
 interface RangeContentInterface extends ContentInterface
 {
 
     /**
-     * Render a specific byte range of the content to the client. Matches the semantics of HTTP range requests, so:
-     * - If both $start and $end are provided, render bytes $start to $end inclusive.
-     * - If only $start is provided, render from byte $start to the end of the content.
-     * - If only $end is provided, render the last $end bytes of the content.
+     * Render a specific byte range of the content.
      *
-     * @param int|null $start The starting byte index (inclusive).start
-     * @param int|null $end The ending byte index (inclusive).
+     * Matches HTTP range request semantics:
+     * - Both provided: render bytes $start to $end inclusive (e.g., "0-1023" = first 1024 bytes)
+     * - Only $start: render from byte $start to the end (e.g., "1000-" = byte 1000 to EOF)
+     * - Only $end: render the last $end bytes (e.g., "-500" = last 500 bytes)
      *
+     * @param int|null $start The starting byte position (0-indexed, inclusive)
+     * @param int|null $end The ending byte position (0-indexed, inclusive)
      * @return void
-     *
-     * @throws ContentException if the content cannot be rendered
+     * @throws ContentException if the content cannot be rendered due to I/O errors
      * @throws RangeUnsatisfiableException if the requested range is invalid or cannot be satisfied
      */
     public function renderRange(int|null $start, int|null $end): void;
 
     /**
-     * Ensure that the requested byte range is valid and can be satisfied by the content. Matches the semantics of HTTP range requests, so:
-     * - If both $start and $end are provided, render bytes $start to $end inclusive.
-     * - If only $start is provided, render from byte $start to the end of the content.
-     * - If only $end is provided, render the last $end bytes of the content.
+     * Check if a byte range is valid and satisfiable for this content.
      *
-     * @param int|null $start The starting byte index (inclusive).start
-     * @param int|null $end The ending byte index (inclusive).
+     * Validates that the requested range makes sense given the content's size and structure. Should return false for invalid ranges rather than throwing exceptions.
      *
-     * @return bool
-     * @throws ContentException if something goes wrong checking the range, such as I/O errors when determining content length
+     * @param int|null $start The starting byte position (0-indexed, inclusive)
+     * @param int|null $end The ending byte position (0-indexed, inclusive)
+     * @return bool True if the range is valid and can be satisfied, false otherwise
+     * @throws ContentException if something goes wrong checking the range (e.g., I/O errors determining size)
      */
     public function verifyRange(int|null $start, int|null $end): bool;
 
