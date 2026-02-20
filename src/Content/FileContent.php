@@ -14,7 +14,7 @@ use Stringable;
 /**
  * Content implementation for serving files from the filesystem.
  *
- * Automatically detects MIME types, generates ETags from file hashes, and supports efficient range requests for streaming large files. The file is read in chunks to minimize memory usage.
+ * Automatically detects MIME types, generates Etags from file hashes, and supports efficient range requests for streaming large files. The file is read in chunks to minimize memory usage.
  */
 class FileContent extends AbstractRangeContent
 {
@@ -30,11 +30,11 @@ class FileContent extends AbstractRangeContent
     protected string|null $file_hash = null;
 
     /**
-     * Generate an ETag based on the file's MD5 hash.
+     * Generate an Etag based on the file's MD5 hash.
      *
-     * Computes and caches the MD5 hash of the file for use as an ETag. This allows clients to validate cached content efficiently.
+     * Computes and caches the MD5 hash of the file for use as an Etag. This allows clients to validate cached content efficiently.
      *
-     * @return string|Stringable|null The computed ETag
+     * @return string|Stringable|null The computed Etag
      * @throws ContentException if the file hash cannot be computed
      */
     public function etag(): string|Stringable|null
@@ -44,7 +44,7 @@ class FileContent extends AbstractRangeContent
         if ($this->file_hash === null) {
             $hash = md5_file($this->source_file);
             if ($hash === false)
-                throw new ContentException("Failed to compute file hash for ETag: " . $this->source_file);
+                throw new ContentException("Failed to compute file hash for Etag: " . $this->source_file);
             $this->file_hash = $hash;
         }
         return $this->file_hash;

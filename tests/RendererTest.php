@@ -129,9 +129,9 @@ class RendererTest extends TestCase
 
         $headers = $this->renderer->buildHeaders($response);
 
-        $this->assertArrayHasKey('ETag', $headers);
-        $this->assertStringStartsWith('"', $headers['ETag']);
-        $this->assertStringEndsWith('"', $headers['ETag']);
+        $this->assertArrayHasKey('Etag', $headers);
+        $this->assertStringStartsWith('"', $headers['Etag']);
+        $this->assertStringEndsWith('"', $headers['Etag']);
     }
 
     public function test_build_headers_includes_etag_for_string(): void
@@ -140,9 +140,9 @@ class RendererTest extends TestCase
 
         $headers = $this->renderer->buildHeaders($response);
 
-        $this->assertArrayHasKey('ETag', $headers);
+        $this->assertArrayHasKey('Etag', $headers);
         $expectedEtag = '"' . md5('test content') . '"';
-        $this->assertEquals($expectedEtag, $headers['ETag']);
+        $this->assertEquals($expectedEtag, $headers['Etag']);
     }
 
     public function test_build_headers_omits_etag_when_null(): void
@@ -150,7 +150,7 @@ class RendererTest extends TestCase
         $response = new Response(200, new EmptyContent());
         $headers = $this->renderer->buildHeaders($response);
 
-        $this->assertArrayNotHasKey('ETag', $headers);
+        $this->assertArrayNotHasKey('Etag', $headers);
     }
 
     public function test_build_headers_omits_last_modified_when_null(): void
@@ -410,7 +410,7 @@ class RendererTest extends TestCase
         $this->assertArrayHasKey('Content-Length', $headers);
         $this->assertArrayHasKey('Content-Disposition', $headers);
         $this->assertArrayHasKey('Cache-Control', $headers);
-        $this->assertArrayHasKey('ETag', $headers);
+        $this->assertArrayHasKey('Etag', $headers);
         $this->assertArrayHasKey('Accept-Ranges', $headers);
     }
 

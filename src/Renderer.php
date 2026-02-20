@@ -77,7 +77,7 @@ class Renderer
      * Build the complete set of HTTP headers for the response.
      *
      * Automatically generates headers based on content metadata (Content-Type, Content-Length,
-     * ETag, Last-Modified, etc.) and merges with user-defined headers. User-defined headers
+     * Etag, Last-Modified, etc.) and merges with user-defined headers. User-defined headers
      * take precedence and can override generated headers.
      *
      * @param Response $response The response to build headers for
@@ -92,7 +92,7 @@ class Renderer
         $headers['Content-Type'] = $content->contentType() ?: 'application/octet-stream';
         $headers['Cache-Control'] = (string) $response->cache;
         $headers['Last-Modified'] = $this->header_lastModified($content);
-        $headers['ETag'] = $this->header_etag($content);
+        $headers['Etag'] = $this->header_etag($content);
         // special case for RangeContentInterface
         if ($content instanceof RangeContentInterface) {
             $headers['Accept-Ranges'] = 'bytes';
@@ -159,12 +159,12 @@ class Renderer
     }
 
     /**
-     * Generate an ETag header value.
+     * Generate an Etag header value.
      *
-     * Wraps the content's ETag value in quotes and properly escapes any special characters for use in an HTTP header.
+     * Wraps the content's Etag value in quotes and properly escapes any special characters for use in an HTTP header.
      *
      * @param ContentInterface $content The content to generate the header for
-     * @return string|null The ETag header value, or null if not available
+     * @return string|null The Etag header value, or null if not available
      */
     public function header_etag(ContentInterface $content): string|null
     {

@@ -141,7 +141,7 @@ class FileContentTest extends TestCase
         unlink($path);
 
         $this->expectException(ContentException::class);
-        $this->expectExceptionMessage('Failed to compute file hash for ETag');
+        $this->expectExceptionMessage('Failed to compute file hash for Etag');
 
         $content->etag();
     }

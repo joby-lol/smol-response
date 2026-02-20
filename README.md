@@ -233,7 +233,7 @@ $headers = $renderer->buildHeaders($response);
 * `Content-Type` with charset for text content
 * `Content-Length` for known-size content
 * `Content-Disposition` with filename for downloads
-* `ETag` from content hashes
+* `Etag` from content hashes
 * `Last-Modified` from file modification times
 * `Accept-Ranges` for range-capable content
 * `Content-Range` for partial content responses
