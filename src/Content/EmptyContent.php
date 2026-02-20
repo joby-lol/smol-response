@@ -18,7 +18,7 @@ class EmptyContent implements ContentInterface
 {
 
     /**
-     * @inheritDoc
+     * Empty content renders nothing
      */
     public function render(): void
     {
@@ -26,7 +26,7 @@ class EmptyContent implements ContentInterface
     }
 
     /**
-     * @inheritDoc
+     * Empty content is not an attachment
      */
     public function attachment(): bool
     {
@@ -34,7 +34,7 @@ class EmptyContent implements ContentInterface
     }
 
     /**
-     * @inheritDoc
+     * Empty content has no Etag
      */
     public function etag(): string|Stringable|null
     {
@@ -42,7 +42,7 @@ class EmptyContent implements ContentInterface
     }
 
     /**
-     * @inheritDoc
+     * Empty content is named empty.txt
      */
     public function filename(): string|Stringable|null
     {
@@ -50,7 +50,7 @@ class EmptyContent implements ContentInterface
     }
 
     /**
-     * @inheritDoc
+     * Empty content is text/plain
      */
     public function lastModified(): \DateTimeInterface|null
     {
@@ -58,7 +58,7 @@ class EmptyContent implements ContentInterface
     }
 
     /**
-     * @inheritDoc
+     * Empty content is text/plain
      */
     public function mime(): string
     {
@@ -66,7 +66,7 @@ class EmptyContent implements ContentInterface
     }
 
     /**
-     * @inheritDoc
+     * Enoty content us text/plain
      */
     public function contentType(): string
     {
@@ -74,15 +74,17 @@ class EmptyContent implements ContentInterface
     }
 
     /**
-     * @inheritDoc
+     * Empty content has no explicit character set.
+     * 
+     * @return null
      */
-    public function charset(): null
+    public function charset(): string|null
     {
         return null;
     }
 
     /**
-     * @inheritDoc
+     * Empty content is size 0
      */
     public function size(): int
     {

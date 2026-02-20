@@ -13,6 +13,7 @@ use Joby\Smol\Response\Content\ContentInterface;
 use Joby\Smol\Response\Content\EmptyContent;
 use Joby\Smol\Response\Content\FileContent;
 use Joby\Smol\Response\Content\JsonContent;
+use Joby\Smol\Response\Content\NotModifiedContent;
 use Joby\Smol\Response\Content\StringContent;
 use Stringable;
 
@@ -109,6 +110,18 @@ class Response
             status: $status,
             content: new FileContent($file_path),
         );
+    }
+
+    /**
+     * Convert this Response to be appropriate for a 304 Not Modified response. This will strip the content and replace it with an EmptyContent object, but preserve all other headers.
+     *
+     * @return self This Response for method chaining
+     */
+    public function notModified(): self
+    {
+        $this->setContent(new NotModifiedContent($this->content));
+        $this->setStatus(304);
+        return $this;
     }
 
     /**

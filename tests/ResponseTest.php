@@ -12,6 +12,7 @@ namespace Joby\Smol\Response;
 use Joby\Smol\Response\Content\EmptyContent;
 use Joby\Smol\Response\Content\FileContent;
 use Joby\Smol\Response\Content\JsonContent;
+use Joby\Smol\Response\Content\NotModifiedContent;
 use Joby\Smol\Response\Content\StringContent;
 use PHPUnit\Framework\TestCase;
 
@@ -477,6 +478,72 @@ class ResponseTest extends TestCase
         $this->assertSame($headers, $response->headers);
         $this->assertSame($cache, $response->cache);
         $this->assertInstanceOf(StringContent::class, $response->content);
+    }
+
+    public function test_not_modified_sets_status_304(): void
+    {
+        $response = new Response(200, 'Hello World');
+        $response->notModified();
+
+        $this->assertEquals(304, $response->status->code);
+    }
+
+    public function test_not_modified_replaces_content_with_not_modified_content(): void
+    {
+        $response = new Response(200, 'Hello World');
+        $response->notModified();
+
+        $this->assertInstanceOf(NotModifiedContent::class, $response->content);
+    }
+
+    public function test_not_modified_preserves_content_metadata(): void
+    {
+        $content = new StringContent('Hello World');
+        $response = new Response(200, $content);
+        $response->notModified();
+
+        $this->assertSame($content->mime(), $response->content->mime());
+        $this->assertSame($content->charset(), $response->content->charset());
+        $this->assertSame($content->etag(), $response->content->etag());
+    }
+
+    public function test_not_modified_preserves_headers(): void
+    {
+        $headers = new Headers(['X-Custom' => 'value']);
+        $response = new Response(200, 'Hello', $headers);
+        $response->notModified();
+
+        $this->assertEquals('value', $response->headers['X-Custom']);
+    }
+
+    public function test_not_modified_returns_self(): void
+    {
+        $response = new Response(200, 'Hello World');
+        $result = $response->notModified();
+
+        $this->assertSame($response, $result);
+    }
+
+    public function test_not_modified_render_produces_no_output(): void
+    {
+        $response = new Response(200, 'Hello World');
+        $response->notModified();
+
+        ob_start();
+        $response->content->render();
+        $output = ob_get_clean();
+
+        $this->assertSame('', $output);
+    }
+
+    public function test_not_modified_chains_fluently(): void
+    {
+        $response = (new Response(200, 'Hello'))
+            ->cachePublicContent()
+            ->notModified();
+
+        $this->assertEquals(304, $response->status->code);
+        $this->assertStringContainsString('public', (string) $response->cache);
     }
 
 }
