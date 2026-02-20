@@ -54,7 +54,7 @@ class ResponseTest extends TestCase
         $this->assertEquals(200, $response->status->code);
         $this->assertInstanceOf(EmptyContent::class, $response->content);
         $this->assertInstanceOf(Headers::class, $response->headers);
-        $this->assertInstanceOf(CacheControl::class, $response->cache);
+        $this->assertNull($response->cache);
     }
 
     public function test_creates_response_with_integer_status(): void
@@ -139,13 +139,6 @@ class ResponseTest extends TestCase
         $response = new Response(200, null, null, $cache);
 
         $this->assertSame($cache, $response->cache);
-    }
-
-    public function test_default_cache_is_never_cached(): void
-    {
-        $response = new Response();
-
-        $this->assertEquals('no-store, max-age=0', (string) $response->cache);
     }
 
     public function test_set_status_with_integer(): void

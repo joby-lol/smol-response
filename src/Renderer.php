@@ -90,7 +90,8 @@ class Renderer
         $headers = [];
         $headers['Content-Disposition'] = $this->header_contentDisposition($content);
         $headers['Content-Type'] = $content->contentType() ?: 'application/octet-stream';
-        $headers['Cache-Control'] = (string) $response->cache;
+        if ($response->cache)
+            $headers['Cache-Control'] = (string) $response->cache;
         $headers['Last-Modified'] = $this->header_lastModified($content);
         $headers['Etag'] = $this->header_etag($content);
         // special case for RangeContentInterface

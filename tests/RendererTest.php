@@ -386,7 +386,7 @@ class RendererTest extends TestCase
         $headers = $this->renderer->buildHeaders($response);
 
         $this->assertEquals('application/json; charset=UTF-8', $headers['Content-Type']);
-        $this->assertStringContainsString('no-store', $headers['Cache-Control']);
+        $this->assertArrayNotHasKey('Cache-Control', $headers);
     }
 
     public function test_build_headers_for_redirect_response(): void

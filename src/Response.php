@@ -29,7 +29,7 @@ class Response
 
     public Headers $headers;
 
-    public CacheControl $cache;
+    public CacheControl|null $cache;
 
     public ContentInterface $content;
 
@@ -57,7 +57,7 @@ class Response
         $this->setStatus($status);
         $this->setContent($content);
         $this->headers = $headers ?? new Headers();
-        $this->cache = $cache ?? CacheControl::neverCached();
+        $this->cache = $cache;
     }
 
     /**
