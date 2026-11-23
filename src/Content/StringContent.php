@@ -55,7 +55,7 @@ class StringContent extends AbstractRangeContent
         elseif ($start !== null && $end === null) {
             echo substr($this->content, $start);
         }
-        elseif ($start !== null && $end !== null) {
+        elseif ($end !== null) { // $start !== null is now implied
             echo substr($this->content, $start, $end - $start + 1);
         }
         else {

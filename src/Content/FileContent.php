@@ -87,7 +87,8 @@ class FileContent extends AbstractRangeContent
     public function __construct(
         string|Stringable $source_file,
         string|Stringable|null $filename = null,
-    ) {
+    )
+    {
         $this->source_file = (string) $source_file;
         if (!file_exists($this->source_file)) {
             throw new ContentException("File does not exist: " . $this->source_file);
@@ -116,7 +117,7 @@ class FileContent extends AbstractRangeContent
             $start_byte = $start;
             $end_byte = $size - 1;
         }
-        elseif ($start !== null && $end !== null) {
+        elseif ($end !== null) { // $start !== null is now implied
             $start_byte = $start;
             $end_byte = $end;
         }
