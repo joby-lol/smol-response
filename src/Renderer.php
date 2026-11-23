@@ -135,7 +135,7 @@ class Renderer
             return $value;
         }
         $filename = (string) $filename;
-        $ascii_filename = mb_ereg_replace('[^a-zA-Z0-9_\- \.]', '_', $filename);
+        $ascii_filename = preg_replace('/[^a-zA-Z0-9_ \.-]/u', '_', $filename);
         assert(is_string($ascii_filename));
         $value .= '; filename="' . addcslashes($ascii_filename, '"\\') . '"';
         if ($ascii_filename != $filename) {
